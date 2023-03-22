@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import App from '../App';
 
 interface TimeProps {
   time: number, // Time in Seconds
