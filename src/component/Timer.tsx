@@ -1,25 +1,37 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import App from '../App';
 
 interface TimeProps {
-  time: number; // Time in Seconds
+  time: number, // Time in Seconds
+  timerEnds: () => void;
 }
 
 const Timer = (timeProps: TimeProps) => {
-  const [seconds, setSeconds] = useState(0);
-  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(timeProps.time % 60);
+  const [minutes, setMinutes] = useState(Math.floor((timeProps.time / 60)));
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let time = timeProps.time
 
-    if (timeProps.time > 0) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => (seconds === 59 ? 0 : seconds + 1));
-        setMinutes((minutes) => (seconds === 59 ? minutes + 1 : minutes));
-      }, 1000);
+    if (time > 0) {
+      time--;
+    
+      const interval = setInterval(() => {
+        let sec = time % 60;
+        let min = Math.floor(time / 60);
+    
+        setMinutes(min);
+        setSeconds(sec);
+    
+        time--;
+    
+        if (time < 0) {
+          clearInterval(interval);
+          timeProps.timerEnds();
+        }
+      }, 1000);    
     }
-
-    return () => clearInterval(interval);
-  }, [timeProps.time]);
+  }, [timeProps])
 
   return (
     <div
