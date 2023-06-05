@@ -1,51 +1,49 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react'
 
-interface TimeProps {
-  time: number, // Time in Seconds
-  timerEnds: () => void;
-}
+const Timer = (
+  props: {
+    time: number,
+    onEnd: () => void
+  }
+) => {
+  const getTimeString = (num: number): string => {
+    return `${num < 10 ? '0' : ''}${num}`
+  }
 
-const Timer = (timeProps: TimeProps) => {
-  const [seconds, setSeconds] = useState(timeProps.time % 60);
-  const [minutes, setMinutes] = useState(Math.floor((timeProps.time / 60)));
+  const EndTime = () => {
+
+    props.onEnd()
+  }
+
+  let value = useRef<number>(props.time)
+  
+  const [minute, setMinute] = useState<string>(getTimeString(Math.floor(value.current / 60)))
+  const [second, setSecond] = useState<string>(getTimeString(value.current % 60))
 
   useEffect(() => {
-    let time = timeProps.time
-
-    if (time > 0) {
-      time--;
-    
-      const interval = setInterval(() => {
-        let sec = time % 60;
-        let min = Math.floor(time / 60);
-    
-        setMinutes(min);
-        setSeconds(sec);
-    
-        time--;
-    
-        if (time < 0) {
-          clearInterval(interval);
-          timeProps.timerEnds();
-        }
-      }, 1000);    
+    const setTime = () => {
+      setMinute(getTimeString(Math.floor(value.current / 60)))
+      setSecond(getTimeString(value.current % 60))
     }
-  }, [timeProps])
+    const interval = setInterval(() => {
+      if (value.current < 0) {
+        clearInterval(interval)
+        EndTime()
+        return;
+      }
+      setTime()
+      value.current--;
+    }, 1000)
+  }, [value])
 
   return (
-    <div
-      className='font-Mono m-2'>
-      <span
-        className='p-1 bg-slate-200 m-1 rounded-sm'>
-        {minutes}
-      </span>
-      <span>:</span>
-      <span
-        className='p-1 bg-slate-200 m-1 rounded-sm'>
-        {seconds}
-      </span>
+    <div className='flex'>
+      <>{minute}</>
+      :
+      <>{second}</>
+      
     </div>
-  );
-};
+  )
+}
 
-export default Timer;
+export default Timer
