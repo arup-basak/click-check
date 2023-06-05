@@ -8,8 +8,10 @@ const App = () => {
   const [text, setText] = useState(`Clicked: ${clickedCount.current}`)
   const [clickAvailable, setClickAvailable] = useState(true)
 
+  // const currentTimer = useRef(0);
+
   const handleClick = () => {
-    if(clickAvailable)
+    if (clickAvailable)
       setText(`Clicked: ${++clickedCount.current}`)
   }
 
@@ -19,9 +21,15 @@ const App = () => {
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     setMousePosition({
-      x: event.clientX-8,
-      y: event.clientY-8
+      x: event.clientX - 8,
+      y: event.clientY - 8
     })
+  }
+
+  const handleReset = () => {
+    setClickAvailable(true)
+    clickedCount.current = 0;
+    setText(`Clicked: ${clickedCount.current}`)
   }
 
   const [mousePosition, setMousePosition] = useState({
@@ -34,7 +42,14 @@ const App = () => {
       <div className='w-3/5 m-auto flex flex-col bg-blue-50 justify-center select-none p-2 pb-9 rounded-sm'>
         <div className='flex flex-row justify-between text-2xl font-Mono'>
           <p className='m-1 p-1'>{text}</p>
-          <div>
+          <div className='flex flex-row mt-2'>
+            <div className='cursor-pointer px-2' onClick={handleReset}>
+              <img
+                src={`${process.env.PUBLIC_URL}/reset.svg`}
+                alt="Reset Icon"
+                className='h-8'
+              />
+            </div>
             <Timer
               time={25}
               key={"mytimer"}
