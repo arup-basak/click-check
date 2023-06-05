@@ -10,13 +10,12 @@ const Timer = (
     return `${num < 10 ? '0' : ''}${num}`
   }
 
-  const EndTime = () => {
-
-    props.onEnd()
-  }
+  // const EndTime = () => {
+  //   props.onEnd()
+  // }
 
   let value = useRef<number>(props.time)
-  
+
   const [minute, setMinute] = useState<string>(getTimeString(Math.floor(value.current / 60)))
   const [second, setSecond] = useState<string>(getTimeString(value.current % 60))
 
@@ -28,7 +27,8 @@ const Timer = (
     const interval = setInterval(() => {
       if (value.current < 0) {
         clearInterval(interval)
-        EndTime()
+        // EndTime();
+        props.onEnd()
         return;
       }
       setTime()
@@ -38,10 +38,10 @@ const Timer = (
 
   return (
     <div className='flex'>
-      <>{minute}</>
+      <div>{minute}</div>
       :
-      <>{second}</>
-      
+      <div>{second}</div>
+
     </div>
   )
 }
