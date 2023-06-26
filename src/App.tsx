@@ -10,6 +10,8 @@ const App = () => {
   const [timerKey, setTimerKey] = useState(0);
   const [alertKey, setAlertKey] = useState(0);
 
+  const [alertMessage, setAlertMessage] = useState(`Get clicking, show us your best, beat the click challenge!`);
+
   const [timerWorking, setTimerWorking] = useState(false)
 
   const [screenActive, setScreenActive] = useState(false)
@@ -20,7 +22,7 @@ const App = () => {
   const [timerInitialTime, setTimerInitialTime] = useState(60);
 
   const setAlert = (message: string) => {
-    console.log(message)
+    setAlertMessage(message)
     setScreenActive(false)
     setAlertKey(alertKey + 1)
   }
@@ -82,13 +84,14 @@ const App = () => {
   });
 
   return (
-    <>
+    <div className='flex w-full h-screen justify-center items-center'>
       <Alert
+        message={alertMessage}
         previousTime={timerInitialTime}
         key={alertKey}
         onClose={onHandleAlertClose}
       />
-      <div className={`w-3/5 m-auto flex flex-col bg-blue-50 justify-center select-none p-2 pb-9 rounded-sm`}>
+      <div className={`w-3/5 m-auto flex flex-col bg-blue-50 justify-center select-none p-4 pb-9 rounded-md`}>
         <div className='flex flex-row justify-between text-2xl font-Mono'>
           <p className='m-1 p-1'>{text}</p>
           <div className='flex flex-row mt-2'>
@@ -111,13 +114,13 @@ const App = () => {
           initial={{
             scale: 0
           }}
-          animate={{
+          animate={screenActive ? {
             scale: 1
-          }}
+          } : {}}
           transition={{
             delay: 0.3
           }}
-          className='clicked-area h-[400px] border border-slate-400 bg-slate-200 cursor-pointer w-3/5 m-auto rounded-xl flex justify-center items-center'
+          className='clicked-area h-[400px] border border-slate-400 bg-slate-200 cursor-pointer w-3/5 m-auto rounded-xl flex justify-center items-center text-slate-900'
           onClick={handleClick}
           onContextMenu={handleRightClick}
           onMouseMove={handleMouseMove}>
@@ -153,7 +156,7 @@ const App = () => {
           />
         </motion.div>
       </div>
-    </>
+    </div>
   );
 }
 

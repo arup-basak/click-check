@@ -27,9 +27,9 @@ const Alert = (props: AlertProps) => {
                 transition={{
                     delay: 0.3
                 }}
-                className='p-10 rounded-md bg-slate-500'>
-                {props.message && (
-                    <div className='text-xl'>
+                className='p-10 rounded-md bg-blue-200 shadow-sm'>
+                {props.message !== '' && (
+                    <div className='text-lg max-w-[300px] m-auto text-center mb-3'>
                         {props.message}
                     </div>
                 )}
