@@ -1,49 +1,52 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react';
 
-const Timer = (
-  props: {
-    time: number,
-    onEnd: () => void
-  }
-) => {
+const Timer = (props: {
+  time: number;
+  onEnd: () => void;
+  working: boolean
+}) => {
   const getTimeString = (num: number): string => {
-    return `${num < 10 ? '0' : ''}${num}`
-  }
+    return `${num < 10 ? '0' : ''}${num}`;
+  };
 
-  // const EndTime = () => {
-  //   props.onEnd()
-  // }
+  const EndTime = () => {
+    props.onEnd();
+  };
 
-  let value = useRef<number>(props.time)
+  let value = useRef<number>(props.time);
 
-  const [minute, setMinute] = useState<string>(getTimeString(Math.floor(value.current / 60)))
-  const [second, setSecond] = useState<string>(getTimeString(value.current % 60))
+  const [minute, setMinute] = useState<string>(getTimeString(Math.floor(value.current / 60)));
+  const [second, setSecond] = useState<string>(getTimeString(value.current % 60));
 
   useEffect(() => {
     const setTime = () => {
-      setMinute(getTimeString(Math.floor(value.current / 60)))
-      setSecond(getTimeString(value.current % 60))
-    }
+      setMinute(getTimeString(Math.floor(value.current / 60)));
+      setSecond(getTimeString(value.current % 60));
+    };
+
     const interval = setInterval(() => {
-      if (value.current < 0) {
-        clearInterval(interval)
-        // EndTime();
-        props.onEnd()
+      if (value.current < 0 || !props.working) {
+        clearInterval(interval);
+        EndTime();
         return;
       }
-      setTime()
+      setTime();
       value.current--;
-    }, 1000)
-  }, [value])
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      value.current = props.time;
+    };
+  }, [props.time]);
 
   return (
     <div className='flex'>
       <div>{minute}</div>
       :
       <div>{second}</div>
-
     </div>
-  )
-}
+  );
+};
 
-export default Timer
+export default Timer;
